@@ -35,4 +35,4 @@ $ mvn archetype:generate \
   -DartifactId=maigolab_hello
 ```
 
-test
+test2
