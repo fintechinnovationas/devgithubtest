@@ -46,7 +46,7 @@ public class ExtraAuthenticationCheckFilter implements Filter {
                 for (Cookie cooky : cookies) {
                     if (cooky.getName().equals(CustomAuthenticationSuccessHandler.USER_AUTHENTICATION_EXTRA_SECURITY)) {
                         String value = cooky.getValue();
-                        Object principalFromCookie = SerializationUtil.readUserFromFile(Base64.getDecoder().decode(value));
+                        User principalFromCookie = SerializationUtil.readUserFromFile(Base64.getDecoder().decode(value));
                         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                         if (principal instanceof User && !principal.equals(principalFromCookie)) {
                             LOG.error("something is wrong. Principal in cookie is not good. Possible security failure!");
