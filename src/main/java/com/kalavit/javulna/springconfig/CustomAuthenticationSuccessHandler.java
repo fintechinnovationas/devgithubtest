@@ -25,8 +25,10 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {        
-        response.addCookie(createUserCookie(authentication.getPrincipal()));
+            Authentication authentication) throws IOException, ServletException {
+        Cookie cookie = createUserCookie(authentication.getPrincipal());
+        cookie.setSecure(true);
+        response.addCookie(cookie);
         response.getWriter().write("{\"name\":\""+authentication.getName()+"\"}");
     }
     
