@@ -34,7 +34,7 @@ public class LdapService {
     LdapConfig ldapConfig;
 
     private DirContext initContext() throws NamingException {
-        Hashtable<String, String> environment = new Hashtable<String, String>();
+        Hashtable<String, String> environment = new Hashtable<>();
 
         environment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         environment.put(Context.PROVIDER_URL, ldapConfig.getUrl());
@@ -45,8 +45,7 @@ public class LdapService {
         environment.put(Context.STATE_FACTORIES, "PersonStateFactory");
         environment.put(Context.OBJECT_FACTORIES, "PersonObjectFactory");
 
-        DirContext ctx = new InitialDirContext(environment);
-        return ctx;
+        return new InitialDirContext(environment);
     }
 
     public LdapUserDto findUser(String uid, String password) {
@@ -65,9 +64,9 @@ public class LdapService {
             SearchControls ctls = new SearchControls();
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            NamingEnumeration answer = ctx.search(ldapConfig.getSearchbase(), safeFilter, ctls);
+            NamingEnumeration<SearchResult> answer = ctx.search(ldapConfig.getSearchbase(), safeFilter, ctls);
 
-            SearchResult sr = (SearchResult) answer.next();
+            SearchResult sr = answer.next();
             Attributes attrs = sr.getAttributes();
             if (attrs != null) {
 
