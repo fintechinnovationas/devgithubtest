@@ -9,8 +9,6 @@ import com.kalavit.javulna.dto.MovieDto;
 import com.kalavit.javulna.model.Movie;
 import com.kalavit.javulna.services.autodao.MovieAutoDao;
 import java.io.ByteArrayInputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
@@ -61,7 +58,6 @@ public class MovieService {
         }
         if (StringUtils.hasText(id)) {
             appendCondition(sql, conditions);
-            conditions++;
             sql.append("id = '").append(id).append("'");
         }
         LOG.debug(sql.toString());
