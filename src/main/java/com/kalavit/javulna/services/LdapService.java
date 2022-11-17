@@ -20,6 +20,8 @@ import javax.naming.directory.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -52,12 +54,18 @@ public class LdapService {
         try {
             LdapUserDto ret = new LdapUserDto();
             DirContext ctx = initContext();
-            String filter = "(&(uid=" + uid + ") (userPassword=" + password + "))";
+
+            // ESAPI encoder
+            Encoder encoder = DefaultEncoder.getInstance();
+
+            String safeUid = encoder.encodeForLDAP(uid);
+            String safePassword = encoder.encodeForLDAP(password);
+            String safeFilter = "(&(uid=" + safeUid + ") (userPassword=" + safePassword + "))";
 
             SearchControls ctls = new SearchControls();
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            NamingEnumeration answer = ctx.search(ldapConfig.getSearchbase(), filter, ctls);
+            NamingEnumeration answer = ctx.search(ldapConfig.getSearchbase(), safeFilter, ctls);
 
             SearchResult sr = (SearchResult) answer.next();
             Attributes attrs = sr.getAttributes();
