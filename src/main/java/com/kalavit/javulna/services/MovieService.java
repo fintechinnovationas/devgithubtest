@@ -66,16 +66,13 @@ public class MovieService {
         }
         LOG.debug(sql.toString());
 
-        return this.jdbcTemplate.query(sql.toString(), new RowMapper<MovieDto>() {
-            @Override
-            public MovieDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                MovieDto ret = new MovieDto();
-                ret.setDescription(rs.getString("description"));
-                ret.setTitle(rs.getString("title"));
-                ret.setGenre(rs.getString("genre"));
-                ret.setId(rs.getString("id"));
-                return ret;
-            }
+        return this.jdbcTemplate.query(sql.toString(), (rs, rowNum) -> {
+            MovieDto ret = new MovieDto();
+            ret.setDescription(rs.getString("description"));
+            ret.setTitle(rs.getString("title"));
+            ret.setGenre(rs.getString("genre"));
+            ret.setId(rs.getString("id"));
+            return ret;
         });
     }
 
