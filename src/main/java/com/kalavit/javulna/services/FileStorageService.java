@@ -38,7 +38,7 @@ public class FileStorageService {
         try {
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = Paths.get(fileStorageDir, fileName);
-            LOG.debug("gonna write file to {}" ,targetLocation.toString());
+            LOG.debug("gonna write file to {}" , targetLocation);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (IOException ex) {
@@ -51,7 +51,7 @@ public class FileStorageService {
                 .replaceAll("\\.","");
         try {
             Path filePath = Paths.get(fileStorageDir, filename);
-            LOG.debug("gonna read file from {}" ,filePath.toString());
+            LOG.debug("gonna read file from {}" , filePath);
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;
