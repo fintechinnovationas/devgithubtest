@@ -49,7 +49,7 @@ public class ExtraAuthenticationCheckFilter implements Filter {
                         Object principalFromCookie = SerializationUtil.readUserFromFile(Base64.getDecoder().decode(value));
                         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                         if (principal instanceof User && !principal.equals(principalFromCookie)) {
-                            LOG.error("something is wrong. Principal in cookie is not good. Possible secuirty failure!");
+                            LOG.error("something is wrong. Principal in cookie is not good. Possible security failure!");
                         } else {
                             LOG.debug("the two principals are the same. Good.");
                         }
