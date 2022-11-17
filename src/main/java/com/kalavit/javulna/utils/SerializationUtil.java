@@ -5,11 +5,10 @@
  */
 package com.kalavit.javulna.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+
+import com.kalavit.javulna.model.User;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +42,8 @@ public class SerializationUtil {
         }
     }
 
-    public static Object readUserFromFile(byte[] byteArray) {
-        try {
-            return new ObjectInputStream(new ByteArrayInputStream(byteArray)).readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-
+    public static User readUserFromFile(byte[] byteArray) {
+        return SerializationUtils.deserialize(byteArray);
     }
 
 }
