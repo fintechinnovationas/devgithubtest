@@ -47,17 +47,19 @@ public class FileStorageService {
     }
     
     public Resource loadFileAsResource(String fileName) {
+        String filename = fileName.replaceAll("/", "").replaceAll("\\\\","")
+                .replaceAll("\\.","");
         try {
-            Path filePath = Paths.get(fileStorageDir, fileName);
+            Path filePath = Paths.get(fileStorageDir, filename);
             LOG.debug("gonna read file from {}" ,filePath.toString());
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;
             } else {
-                throw new RuntimeException("File not found " + fileName);
+                throw new RuntimeException("File not found " + filename);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("File not found " + fileName, ex);
+            throw new RuntimeException("File not found " + filename, ex);
         }
     }
 
