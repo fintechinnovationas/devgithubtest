@@ -65,7 +65,8 @@ public class MovieService {
             sql.append("id = '").append(id).append("'");
         }
         LOG.debug(sql.toString());
-        List<MovieDto> users = this.jdbcTemplate.query(sql.toString(), new RowMapper<MovieDto>() {
+
+        return this.jdbcTemplate.query(sql.toString(), new RowMapper<MovieDto>() {
             @Override
             public MovieDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 MovieDto ret = new MovieDto();
@@ -76,8 +77,6 @@ public class MovieService {
                 return ret;
             }
         });
-
-        return users;
     }
 
     private void appendCondition(StringBuilder sb, int conditions) {
