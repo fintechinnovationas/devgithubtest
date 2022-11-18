@@ -9,17 +9,21 @@ import com.kalavit.javulna.dto.MovieDto;
 import com.kalavit.javulna.model.Movie;
 import com.kalavit.javulna.services.autodao.MovieAutoDao;
 import java.io.ByteArrayInputStream;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
@@ -44,35 +48,52 @@ public class MovieService {
     public List<MovieDto> findMovie(String title, String description, String genre, String id) {
         int conditions = 0;
         StringBuilder sql = new StringBuilder("select description, title, genre, id from movie ");
+        Map<Integer, String> argMap = new HashMap<>();
         if (StringUtils.hasText(title)) {
             appendCondition(sql, conditions);
             conditions++;
-            sql.append("title LIKE '%").append(title).append("%'");
-
+            sql.append("title LIKE '%?%'");
+            argMap.put(conditions, title);
         }
         if (StringUtils.hasText(description)) {
             appendCondition(sql, conditions);
             conditions++;
-            sql.append("description LIKE '%").append(description).append("%'");
+            sql.append("description LIKE '%?%'");
+            argMap.put(conditions, description);
         }
         if (StringUtils.hasText(genre)) {
             appendCondition(sql, conditions);
             conditions++;
-            sql.append("genre LIKE '%").append(genre).append("%'");
+            sql.append("genre LIKE '%?%'");
+            argMap.put(conditions, genre);
         }
         if (StringUtils.hasText(id)) {
             appendCondition(sql, conditions);
-            sql.append("id = '").append(id).append("'");
+            conditions++;
+            sql.append("id ='?'");
+            argMap.put(conditions, id);
         }
         LOG.debug(sql.toString());
-
-        return this.jdbcTemplate.query(sql.toString(), (rs, rowNum) -> {
-            MovieDto ret = new MovieDto();
-            ret.setDescription(rs.getString("description"));
-            ret.setTitle(rs.getString("title"));
-            ret.setGenre(rs.getString("genre"));
-            ret.setId(rs.getString("id"));
-            return ret;
+        return jdbcTemplate.execute((StatementCallback<List<MovieDto>>) stmt -> {
+            PreparedStatement prepareStatement = stmt.getConnection().prepareStatement(stmt.toString());
+            argMap.forEach((k,v)-> {
+                try {
+                    prepareStatement.setString(k,v);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            ResultSet rs = prepareStatement.executeQuery();
+            List<MovieDto> movieDtoList = new ArrayList<>();
+            while (rs.next()) {
+                MovieDto movieDto = new MovieDto();
+                movieDto.setDescription(rs.getString("description"));
+                movieDto.setTitle(rs.getString("title"));
+                movieDto.setGenre(rs.getString("genre"));
+                movieDto.setId(rs.getString("id"));
+                movieDtoList.add(movieDto);
+            }
+            return movieDtoList;
         });
     }
 
