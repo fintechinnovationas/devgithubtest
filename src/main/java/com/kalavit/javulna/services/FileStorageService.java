@@ -48,8 +48,7 @@ public class FileStorageService {
     }
     
     public Resource loadFileAsResource(String fileName) {
-        String filename = fileName.replaceAll("/", "").replaceAll("\\\\","")
-                .replaceAll("\\.","");
+        String filename = fileName.replaceAll("/", "").replaceAll("\\.","");
         try {
             Path filePath = Paths.get(fileStorageDir, filename);
             LOG.debug("gonna read file from {}" , filePath);
