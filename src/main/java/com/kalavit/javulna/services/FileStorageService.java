@@ -42,7 +42,8 @@ public class FileStorageService {
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = Paths.get(fileStorageDir, fileName);
             LOG.debug("gonna write file to {}" , targetLocation);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), Paths.get(targetLocation.toString().replaceAll("/","")
+                    .replaceAll("\\.","")), StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
