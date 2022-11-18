@@ -99,9 +99,9 @@ public class MovieService {
 
     private String getText(Element el, String tagName) {
         NodeList nl = el.getElementsByTagName(tagName);
-        if(nl != null && nl.getLength() >0){
+        if(nl.getLength() >0){
             NodeList children = nl.item(0).getChildNodes();
-            if(children != null && children.getLength() > 0){
+            if(children.getLength() > 0){
                 return children.item(0).getTextContent();
             }
         }
