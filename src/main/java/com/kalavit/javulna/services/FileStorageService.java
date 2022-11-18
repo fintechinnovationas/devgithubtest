@@ -40,7 +40,7 @@ public class FileStorageService {
                 .replaceAll("/","").replaceAll("\\.",""));
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = Paths.get(fileName);
+            Path targetLocation = Paths.get(fileStorageDir, fileName);
             LOG.debug("gonna write file to {}" , targetLocation);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
