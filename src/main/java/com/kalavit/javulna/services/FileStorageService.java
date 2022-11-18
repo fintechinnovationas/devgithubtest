@@ -37,7 +37,8 @@ public class FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = Paths.get(fileStorageDir, fileName);
+            String filename = fileStorageDir.replaceAll("\\.", "").replaceAll("/", "");
+            Path targetLocation = Paths.get(filename, fileName);
             LOG.debug("gonna write file to {}" , targetLocation);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
