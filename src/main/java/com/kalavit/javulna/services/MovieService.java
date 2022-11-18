@@ -9,6 +9,7 @@ import com.kalavit.javulna.dto.MovieDto;
 import com.kalavit.javulna.model.Movie;
 import com.kalavit.javulna.services.autodao.MovieAutoDao;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -84,7 +85,7 @@ public class MovieService {
         try {
             Movie m = new Movie();
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = db.parse(new ByteArrayInputStream(xml.getBytes("UTF-8")));
+            Document doc = db.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
             Element root = doc.getDocumentElement();
             m.setTitle(getText(root, "title"));
             m.setDescription(getText(root, "description"));
