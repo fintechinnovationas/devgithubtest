@@ -9,10 +9,13 @@ import com.kalavit.javulna.dto.MovieDto;
 import com.kalavit.javulna.model.Movie;
 import com.kalavit.javulna.services.autodao.MovieAutoDao;
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +87,9 @@ public class MovieService {
     public Movie saveMovieFromXml(String xml){
         try {
             Movie m = new Movie();
-            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder db = factory.newDocumentBuilder();
             Document doc = db.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
             Element root = doc.getDocumentElement();
             m.setTitle(getText(root, "title"));
