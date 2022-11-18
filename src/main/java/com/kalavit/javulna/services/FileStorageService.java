@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,11 +36,11 @@ public class FileStorageService {
     private  String fileStorageDir;
 
     public String storeFile(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())
+                .replaceAll("/","").replaceAll("\\.",""));
         try {
             // Copy file to the target location (Replacing existing file with the same name)
-            String filename = fileStorageDir.replaceAll("\\.", "").replaceAll("/", "");
-            Path targetLocation = Paths.get(filename, fileName);
+            Path targetLocation = Paths.get(fileName);
             LOG.debug("gonna write file to {}" , targetLocation);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
